@@ -73,7 +73,7 @@ client.on('message', msg => {
           msg.author.discriminator
         ]);
 
-
+        msg.reply('Je rijmpje is geaccepteerd, vriendelijk bedankt.');
 
         locked = false;
       }
