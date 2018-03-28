@@ -17,6 +17,7 @@ else {
 
 let locked = false;
 let lastUser = 0;
+let rijmID = 0;
 
 
 
@@ -40,6 +41,8 @@ const client = new Discord.Client();
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
+
+
 });
 
 client.on('message', msg => {
@@ -62,11 +65,15 @@ client.on('message', msg => {
         msg.reply('Je rijmpie moet minimaal 10 tekens bevatten en mag maximaal 150 geldige karakters bevatten.');
       }
       else {
-        msg.reply('lit');
+        db.run('INSERT INTO rijmpies (tekst, rijmID, userID, userName, discriminator) VALUES (?, ?, ?, ?, ?)',[
+          msg.content,
+          rijmID,
+          msg.author.id,
+          msg.author.username,
+          msg.author.discriminator
+        ]);
 
-        console.log(client.guilds[0]);
 
-        client.guilds[0].channels.first().send(`${msg.author.username}${msg.author.discriminator} heeft een rijmpje gedaan, de volgende is aan de beurt!`);
 
         locked = false;
       }
