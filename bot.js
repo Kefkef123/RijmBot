@@ -59,7 +59,7 @@ client.on('message', msg => {
     }
     else {
       // some validation
-      let regex = /^[a-zA-Z\u00C0-\u017F .-]+$/;
+      let regex = /^[a-zA-Z\u00C0-\u017F .\-'",?]+$/;
 
       if(msg.content.length < 10 || msg.content.length > 150 || msg.content.match(regex) == null) {
         msg.reply('Je rijmpie moet minimaal 10 tekens bevatten en mag maximaal 150 geldige karakters bevatten.');
