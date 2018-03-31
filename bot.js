@@ -37,6 +37,7 @@ const createTables = function () {
 const rhymeTimeOut = function (user) {
   if(locked === true && lastUser === user.id) {
     client.channels.get(settings.channel).send(`${user} heeft te lang gedaan over het rijmen, de volgende mag nu rijmen`);
+    user.send('Je hebt er te lang over gedaan, de volgende persoon mag nu rijmen');
     locked = false;
     lastUser = 0;
   }
