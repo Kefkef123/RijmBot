@@ -34,6 +34,12 @@ const createTables = function () {
   db.run("CREATE TABLE IF NOT EXISTS rijmpies (tekst TEXT, rijmID INT, userID TEXT, userName TEXT, discriminator TEXT)", insertData)
 };
 
+const rhymeTimeOut = function (userID) {
+  if(locked === true && lastUser === userID) {
+
+  }
+};
+
 const db = new sqlite3.Database('rijm.sqlite3', createTables);
 
 
@@ -74,6 +80,8 @@ client.on('message', msg => {
         ]);
 
         msg.reply('Je rijmpje is geaccepteerd, vriendelijk bedankt.');
+
+        client.channels.get(settings.channel).send(`${msg.author.username} heeft een rijmpje gedaan, de volgende is nu aande beurt, gebruik \`${settings.commandPrefix}rijm\``)
 
         locked = false;
       }
