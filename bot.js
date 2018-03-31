@@ -18,7 +18,7 @@ else {
 let locked = false;
 let lastUser = 0;
 let rijmID = 0;
-
+let timeOut = null;
 
 
 // if database has no rows, seed with some data
@@ -34,9 +34,11 @@ const createTables = function () {
   db.run("CREATE TABLE IF NOT EXISTS rijmpies (tekst TEXT, rijmID INT, userID TEXT, userName TEXT, discriminator TEXT)", insertData)
 };
 
-const rhymeTimeOut = function (userID) {
-  if(locked === true && lastUser === userID) {
-
+const rhymeTimeOut = function (user) {
+  if(locked === true && lastUser === user.id) {
+    client.channels.get(settings.channel).send(`${user} heeft te lang gedaan over het rijmen, de volgende mag nu rijmen`);
+    locked = false;
+    lastUser = 0;
   }
 };
 
@@ -71,6 +73,8 @@ client.on('message', msg => {
         msg.reply('Je rijmpie moet minimaal 10 tekens bevatten en mag maximaal 150 geldige karakters bevatten.');
       }
       else {
+        client.clearTimeout(timeOut);
+
         db.run('INSERT INTO rijmpies (tekst, rijmID, userID, userName, discriminator) VALUES (?, ?, ?, ?, ?)',[
           msg.content,
           rijmID,
@@ -81,7 +85,7 @@ client.on('message', msg => {
 
         msg.reply('Je rijmpje is geaccepteerd, vriendelijk bedankt.');
 
-        client.channels.get(settings.channel).send(`${msg.author.username} heeft een rijmpje gedaan, de volgende is nu aande beurt, gebruik \`${settings.commandPrefix}rijm\``)
+        client.channels.get(settings.channel).send(`${msg.author} heeft een rijmpje gedaan, de volgende is nu aan de beurt, gebruik \`${settings.commandPrefix}rijm\``)
 
         locked = false;
       }
@@ -106,6 +110,8 @@ client.on('message', msg => {
             msg.author.send(`De mensen voor jou hebben dit gerijmd:\n${rows[1].tekst}\n${rows[0].tekst}\nRijm de volgende regel af met een bericht in dit DM-gesprek.`);
             locked = true;
             lastUser = msg.author.id;
+
+            timeOut = client.setTimeout(rhymeTimeOut, settings.timeOutSeconds * 1000, msg.author);
           }
         });
       }

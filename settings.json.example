@@ -1,5 +1,6 @@
 {
   "token": "YOURTOKENHERE",
   "commandPrefix": "!",
-  "channel": "CHANNELIDHERE"
+  "channel": "CHANNELIDHERE",
+  "timeOutSeconds": 60
 }
