@@ -2,5 +2,8 @@
   "token": "YOURTOKENHERE",
   "commandPrefix": "!",
   "channel": "CHANNELIDHERE",
-  "timeOutSeconds": 60
+  "timeOutSeconds": 60,
+  "adminRoles": [
+    "adminrole"
+  ]
 }

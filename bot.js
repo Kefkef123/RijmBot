@@ -50,8 +50,6 @@ const client = new Discord.Client();
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
-
-
 });
 
 client.on('message', msg => {
@@ -118,6 +116,56 @@ client.on('message', msg => {
       }
       else {
         msg.channel.send('Iemand anders is nog bezig met rijmen!').then(message => message.delete(10000)).catch(console.error);
+      }
+    }
+    else if(msg.content === settings.commandPrefix + 'resultaat') {
+      // only certain roles may execute this command
+      if(msg.member.roles.find(role => settings.adminRoles.includes(role.name))) {
+        // let embed = new Discord.RichEmbed({
+        //   embed: {
+        //     color: '#f4a442',
+        //     title: 'Rijmresultaten',
+        //     description: 'Rijmpjes die gedaan zijn:',
+        //     footer: {
+        //       text: 'Gemaakt door: Kefkef123#0001'
+        //     },
+        //     timestamp: new Date()
+        //   }
+        // });
+        //
+        // embed.setColor('#f4a442');
+
+        db.all("SELECT tekst, userName, discriminator FROM rijmpies ORDER BY ROWID ASC", function(err, rows) {
+
+
+          let message = '```';
+
+          for(let i = 0; i < rows.length; i++) {
+            let row = rows[i];
+
+            message += `${row['userName']}#${row['discriminator']}`.padEnd(37, ' ') + ` ${row['tekst']}\n`
+
+            if((i+1)%10 == 0) {
+              message += '```';
+
+              msg.channel.send(message);
+
+              message = '```';
+            }
+
+            if(i == rows.length - 1) {
+              message += '```';
+
+              msg.channel.send(message);
+            }
+          }
+
+
+
+        });
+      }
+      else {
+        msg.channel.send('Jij bent geen admin jij mag niet');
       }
     }
   }
